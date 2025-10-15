@@ -1,0 +1,83 @@
+<!-- src/app/pages/login/login.component.html -->
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-content>
+      <div class="logo">
+        <mat-icon class="logo-icon">movie</mat-icon>
+        <h1 class="title">Movie Cards</h1>
+      </div>
+
+      <h2 class="subtitle">{{ isRegisterMode ? 'Crear cuenta' : 'Iniciar sesión' }}</h2>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width" *ngIf="isRegisterMode">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="displayName" placeholder="Tu nombre">
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="loginForm.get('displayName')?.hasError('required')">
+            El nombre es requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Correo electrónico</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="tu@email.com">
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+            El correo es requerido
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+            Correo inválido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            La contraseña es requerida
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+            Mínimo 6 caracteres
+          </mat-error>
+        </mat-form-field>
+
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit" 
+          class="full-width submit-btn"
+          [disabled]="loginForm.invalid || loading"
+        >
+          <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+          <span *ngIf="!loading">{{ isRegisterMode ? 'Registrarse' : 'Iniciar sesión' }}</span>
+        </button>
+      </form>
+
+      <mat-divider class="divider">
+        <span class="divider-text">O continuar con</span>
+      </mat-divider>
+
+      <button 
+        mat-stroked-button 
+        class="full-width google-btn"
+        (click)="loginWithGoogle()"
+        [disabled]="loading"
+      >
+        <img src="https://www.google.com/favicon.ico" alt="Google" class="google-icon">
+        Continuar con Google
+      </button>
+
+      <div class="toggle-mode">
+        <span>{{ isRegisterMode ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?' }}</span>
+        <button mat-button color="primary" type="button" (click)="toggleMode()">
+          {{ isRegisterMode ? 'Iniciar sesión' : 'Registrarse' }}
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

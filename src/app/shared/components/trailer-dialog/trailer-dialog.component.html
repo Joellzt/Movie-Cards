@@ -1,0 +1,15 @@
+<!-- src/app/shared/components/trailer-dialog/trailer-dialog.component.html -->
+<div class="trailer-dialog">
+  <button mat-icon-button class="close-btn" (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+  
+  <div class="video-container">
+    <iframe
+      [src]="videoUrl"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>

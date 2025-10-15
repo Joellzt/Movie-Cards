@@ -1,0 +1,268 @@
+<!-- src/app/pages/movie-detail/movie-detail.component.html -->
+<div class="detail-container" *ngIf="!loading && movie">
+
+    <!-- Botón de volver -->
+    <button mat-icon-button class="back-button" routerLink="/home">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <!-- Header con backdrop -->
+    <div class="backdrop"
+        [style.background-image]="'url(https://image.tmdb.org/t/p/original' + (movie.backdrop_path || movie.poster_path) + ')'">
+        <div class="backdrop-overlay"></div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+
+        <!-- Info de la película -->
+        <div class="movie-info">
+            <img [src]="movie.poster_path" [alt]="movie.title" class="poster">
+
+            <div class="info">
+                <h1>{{ movie.title }}</h1>
+
+                <!-- Ratings lado a lado -->
+                <div class="ratings-container">
+                    <!-- Rating TMDB -->
+                    <div class="rating-box tmdb-rating">
+                        <div class="rating-header">
+                            <mat-icon>movie</mat-icon>
+                            <span class="rating-label">TMDB</span>
+                        </div>
+                        <div class="stars">
+                            <mat-icon *ngFor="let star of getStars(movie.vote_average)">{{ star }}</mat-icon>
+                        </div>
+                        <div class="rating-value">{{ movie.vote_average.toFixed(1) }} / 10</div>
+                    </div>
+
+                    <!-- Rating Usuarios -->
+                    <div class="rating-box user-rating" [class.has-reviews]="reviews.length > 0">
+                        <div class="rating-header">
+                            <mat-icon>people</mat-icon>
+                            <span class="rating-label">Movie Cards</span>
+                        </div>
+                        <div class="stars" *ngIf="reviews.length > 0">
+                            <mat-icon *ngFor="let star of getStars(averageRating)">{{ star }}</mat-icon>
+                        </div>
+                        <div class="rating-value" *ngIf="reviews.length > 0">
+                            {{ averageRating }} / 10
+                            <span class="review-count">({{ reviews.length }} reseñas)</span>
+                        </div>
+                        <div class="no-rating" *ngIf="reviews.length === 0">
+                            <span>Sin reseñas aún</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="meta">
+                    <span>{{ movie.release_date | date:'yyyy' }}</span>
+                    <span *ngIf="movie.runtime">{{ movie.runtime }} min</span>
+                </div>
+
+                <!-- En la sección de acciones, cambia el botón de guardar -->
+                <div class="actions">
+                    <button mat-raised-button class="save-button" [class.saved]="isSaved" (click)="toggleSave()">
+                        <mat-icon>{{ isSaved ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+                        {{ isSaved ? 'Guardada' : 'Guardar' }}
+                    </button>
+                </div>
+                <p class="overview">{{ movie.overview }}</p>
+
+                <!-- Información adicional -->
+                <div class="additional-info">
+                    <!-- Presupuesto y Recaudación -->
+                    <div class="financial-info" *ngIf="movie.budget || movie.revenue">
+                        <h3>Información Financiera</h3>
+                        <div class="financial-grid">
+                            <div class="financial-item" *ngIf="movie.budget && movie.budget > 0">
+                                <mat-icon>attach_money</mat-icon>
+                                <div>
+                                    <span class="label">Presupuesto</span>
+                                    <span class="value">{{ formatMoney(movie.budget) }}</span>
+                                </div>
+                            </div>
+                            <div class="financial-item" *ngIf="movie.revenue && movie.revenue > 0">
+                                <mat-icon>trending_up</mat-icon>
+                                <div>
+                                    <span class="label">Recaudación</span>
+                                    <span class="value">{{ formatMoney(movie.revenue) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Productoras -->
+                    <div class="production-companies"
+                        *ngIf="movie.production_companies && movie.production_companies.length > 0">
+                        <h3>Productoras</h3>
+                        <div class="companies-grid">
+                            <div class="company-item" *ngFor="let company of movie.production_companies.slice(0, 4)">
+                                <img *ngIf="company.logo_path"
+                                    [src]="'https://image.tmdb.org/t/p/w200' + company.logo_path"
+                                    [alt]="company.name" />
+                                <span *ngIf="!company.logo_path">{{ company.name }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reparto -->
+                    <div class="cast-section"
+                        *ngIf="movie.credits && movie.credits.cast && movie.credits.cast.length > 0">
+                        <h3>Reparto Principal</h3>
+                        <div class="cast-grid">
+                            <div class="cast-member" *ngFor="let actor of movie.credits.cast.slice(0, 12)">
+                                <img [src]="actor.profile_path ? 'https://image.tmdb.org/t/p/w185' + actor.profile_path : 'https://via.placeholder.com/185x278?text=No+Image'"
+                                    [alt]="actor.name" />
+                                <div class="cast-info">
+                                    <p class="actor-name">{{ actor.name }}</p>
+                                    <p class="character-name">{{ actor.character }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trailer -->
+                    <div class="trailer-section">
+                        <h3>Trailer</h3>
+
+                        <!-- Estado de carga -->
+                        <div *ngIf="trailerLoading" class="trailer-loading">
+                            <mat-spinner diameter="50"></mat-spinner>
+                            <p>Cargando trailer...</p>
+                        </div>
+
+                        <!-- Trailer disponible -->
+                        <div *ngIf="trailerKey && !trailerLoading" class="trailer-container">
+                            <iframe [src]="getTrailerUrl()" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen (load)="onTrailerLoad()">
+                            </iframe>
+                        </div>
+
+                        <!-- Error al cargar -->
+                        <div *ngIf="trailerError" class="trailer-error">
+                            <mat-icon>error_outline</mat-icon>
+                            <p>No se pudo cargar el trailer</p>
+                        </div>
+
+                        <!-- Sin trailer disponible -->
+                        <div *ngIf="!trailerKey && !trailerLoading && !trailerError" class="no-trailer">
+                            <mat-icon>videocam_off</mat-icon>
+                            <p>No hay trailer disponible para esta película</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de reseña -->
+        <mat-card class="review-form">
+            <!-- Si el usuario YA tiene una reseña -->
+            <div *ngIf="userReview && !isEditingReview" class="has-review">
+                <h2>Tu reseña</h2>
+                <div class="existing-review">
+                    <div class="review-header">
+                        <div class="stars">
+                            <mat-icon *ngFor="let star of getStars(userReview.rating)">{{ star }}</mat-icon>
+                            <span class="rating-value">{{ userReview.rating }} / 10</span>
+                        </div>
+                        <span class="date">{{ userReview.createdAt | date:'short' }}</span>
+                    </div>
+                    <p class="review-text">{{ userReview.review }}</p>
+                    <div class="review-actions">
+                        <button mat-raised-button color="primary" (click)="startEditReview()">
+                            <mat-icon>edit</mat-icon>
+                            Editar reseña
+                        </button>
+                        <button mat-raised-button color="warn" (click)="deleteReview(userReview.id!)">
+                            <mat-icon>delete</mat-icon>
+                            Eliminar reseña
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Si NO tiene reseña o está editando -->
+            <div *ngIf="!userReview || isEditingReview">
+                <h2>{{ isEditingReview ? 'Editar tu reseña' : 'Agregar tu reseña' }}</h2>
+
+                <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+
+                    <div class="rating-input">
+                        <label>Tu calificación: {{ reviewForm.value.rating }} / 10</label>
+                        <div class="stars-interactive">
+                            <mat-icon *ngFor="let star of [1,2,3,4,5,6,7,8,9,10]" (click)="setRating(star)"
+                                (mouseenter)="hoverRating = star" (mouseleave)="hoverRating = 0"
+                                [class.filled]="star <= (hoverRating || reviewForm.value.rating || 0)"
+                                [class.empty]="star > (hoverRating || reviewForm.value.rating || 0)">
+                                {{ star <= (hoverRating || reviewForm.value.rating || 0) ? 'star' : 'star_border' }}
+                                    </mat-icon>
+                        </div>
+                    </div>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Tu reseña</mat-label>
+                        <textarea matInput formControlName="review" rows="5"
+                            placeholder="Escribe tu opinión sobre esta película..."></textarea>
+                        <mat-error *ngIf="reviewForm.get('review')?.hasError('required')">
+                            La reseña es requerida
+                        </mat-error>
+                        <mat-error *ngIf="reviewForm.get('review')?.hasError('minlength')">
+                            La reseña debe tener al menos 10 caracteres
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div class="form-actions">
+                        <button mat-raised-button color="accent" type="submit" [disabled]="reviewForm.invalid">
+                            <mat-icon>{{ isEditingReview ? 'save' : 'send' }}</mat-icon>
+                            {{ isEditingReview ? 'Actualizar reseña' : 'Publicar reseña' }}
+                        </button>
+                        <button *ngIf="isEditingReview" mat-button type="button" (click)="cancelEdit()">
+                            <mat-icon>close</mat-icon>
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </mat-card>
+
+        <!-- Lista de reseñas -->
+        <div class="reviews-section">
+            <h2>Reseñas de Usuarios ({{ reviews.length }})</h2>
+
+            <div class="reviews-list" *ngIf="reviews.length > 0">
+                <mat-card *ngFor="let review of reviews" class="review-card" [class.my-review]="isMyReview(review)">
+                    <div class="review-header">
+                        <div class="user-info">
+                            <div class="avatar">{{ getInitial(review.userName) }}</div>
+                            <div class="user-details">
+                                <span class="user-name">
+                                    {{ review.userName || 'Anónimo' }}
+                                    <mat-chip *ngIf="isMyReview(review)" class="my-badge">Tú</mat-chip>
+                                </span>
+                                <span class="date">{{ review.createdAt | date:'short' }}</span>
+                            </div>
+                        </div>
+                        <div class="stars">
+                            <mat-icon *ngFor="let star of getStars(review.rating)">{{ star }}</mat-icon>
+                            <span class="rating-value">{{ review.rating }} / 10</span>
+                        </div>
+                    </div>
+
+                    <p class="review-text">{{ review.review }}</p>
+                </mat-card>
+            </div>
+
+            <p class="no-reviews" *ngIf="reviews.length === 0">
+                Sé el primero en dejar una reseña para esta película
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<div class="loading" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+    <p>Cargando película...</p>
+</div>

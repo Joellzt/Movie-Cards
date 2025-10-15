@@ -1,0 +1,561 @@
+/* src/app/pages/my-reviews/my-reviews.component.scss */
+
+.reviews-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d1b1b 100%);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40vh;
+    background: linear-gradient(135deg, rgba(139, 26, 26, 0.15) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+/* Navbar moderno */
+mat-toolbar {
+  background: rgba(15, 15, 15, 0.9) !important;
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 12px 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  .title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #d10000, #881414);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+    margin-left: 8px;
+  }
+}
+
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header de estadísticas */
+.stats-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  
+  .stats-count {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f87171;
+    padding: 8px 16px;
+    background: rgba(248, 113, 113, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(248, 113, 113, 0.2);
+  }
+}
+
+/* Estado vacío mejorado */
+.status {
+  color: #e5e7eb;
+  text-align: center;
+  padding: 120px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  
+  .empty-icon {
+    font-size: 96px;
+    width: 96px;
+    height: 96px;
+    background: linear-gradient(135deg, #f87171, #dc2626);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0.8;
+  }
+  
+  p {
+    font-size: 1.4rem;
+    margin: 0;
+    color: #94a3b8;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  
+  .action-btn {
+    margin-top: 16px;
+    border-radius: 12px;
+    padding: 0 24px;
+    height: 48px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #f87171, #dc2626);
+    box-shadow: 0 8px 24px rgba(248, 113, 113, 0.3);
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(248, 113, 113, 0.4);
+    }
+  }
+}
+
+/* Lista de reseñas mejorada */
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeInUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Cards de reseña modernizadas */
+.review-card {
+  background: linear-gradient(135deg, 
+    rgba(139, 26, 26, 0.95) 0%, 
+    rgba(106, 16, 16, 0.9) 50%,
+    rgba(78, 12, 12, 0.85) 100%);
+  color: #f8fafc;
+  border-radius: 20px;
+  padding: 28px;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(139, 26, 26, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.5),
+      0 8px 24px rgba(139, 26, 26, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .review-header {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      .movie-poster {
+        transform: scale(1.05);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      }
+      
+      .movie-info h3 {
+        color: #ffffff;
+      }
+    }
+
+    .movie-poster {
+      width: 90px;
+      height: 135px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      flex-shrink: 0;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .movie-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: center;
+
+      h3 {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 700;
+        line-height: 1.3;
+        color: #f1f5f9;
+        transition: color 0.3s ease;
+        letter-spacing: -0.01em;
+      }
+
+      .stars {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        mat-icon {
+          color: #fbbf24;
+          font-size: 22px;
+          width: 22px;
+          height: 22px;
+          filter: drop-shadow(0 2px 4px rgba(251, 191, 36, 0.3));
+        }
+
+        .rating-value {
+          margin-left: 12px;
+          font-weight: 700;
+          font-size: 1.2rem;
+          color: #ffffff;
+          background: rgba(255, 255, 255, 0.1);
+          padding: 4px 12px;
+          border-radius: 8px;
+          backdrop-filter: blur(10px);
+        }
+      }
+
+      .date {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+        color: #cbd5e1;
+        font-weight: 500;
+        
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          color: #f87171;
+        }
+      }
+    }
+  }
+
+  .review-text {
+    line-height: 1.7;
+    margin: 0 0 24px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border-left: 4px solid #f87171;
+    font-size: 1.05rem;
+    color: #e2e8f0;
+    position: relative;
+    
+    &::before {
+      content: '"';
+      position: absolute;
+      top: 16px;
+      left: 20px;
+      font-size: 3rem;
+      color: rgba(248, 113, 113, 0.3);
+      font-family: serif;
+      line-height: 1;
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    
+    button {
+      border-radius: 12px;
+      font-weight: 600;
+      padding: 0 20px;
+      height: 42px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+      
+      &.edit-btn {
+        background: rgba(126, 61, 0, 0.178);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #e2e8f0;
+        
+        &:hover {
+          background: rgba(230, 112, 2, 0.356);
+          color: #ffffff;
+        }
+      }
+      
+      &.delete-btn {
+        background: linear-gradient(135deg, #46010179, #ff2d2d44);
+        border: 1px solid rgba(0, 0, 0, 0.719);
+        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.116);
+        color: white;
+        
+        &:hover {
+          box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+          background: linear-gradient(135deg, #85010198, #ff0000);
+        }
+      }
+    }
+  }
+}
+
+/* Modo edición mejorado */
+.edit-mode {
+  padding: 24px 0;
+  animation: slideIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  .rating-input {
+    margin-bottom: 28px;
+    
+    label {
+      display: block;
+      margin-bottom: 20px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      text-align: center;
+      color: #f1f5f9;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .stars-interactive {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      
+      mat-icon {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border-radius: 50%;
+        padding: 4px;
+        
+        &.filled {
+          color: #fbbf24;
+          transform: scale(1.15);
+          filter: drop-shadow(0 4px 8px rgba(251, 191, 36, 0.4));
+        }
+        
+        &.empty {
+          color: rgba(251, 191, 36, 0.3);
+        }
+        
+        &:hover {
+          transform: scale(1.25);
+          background: rgba(251, 191, 36, 0.1);
+        }
+      }
+    }
+    
+    .current-rating {
+      text-align: center;
+      font-weight: 600;
+      color: #fbbf24;
+      font-size: 1.1rem;
+      margin-top: 8px;
+    }
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 20px;
+    
+    .mat-form-field-outline {
+      color: rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    .mat-form-field-outline-thick {
+      color: #f87171 !important;
+    }
+    
+    .mat-input-element {
+      color: #ffffff !important;
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+      }
+    }
+  }
+
+  .edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    
+    button {
+      border-radius: 12px;
+      font-weight: 600;
+      padding: 0 24px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      
+      &.save-btn {
+        background: linear-gradient(135deg, #194e2e81, #ffffff31);
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.13);
+        color: rgb(255, 255, 255);
+        border: 1px solid rgba(51, 255, 0, 0.13);
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(16, 185, 38, 0.336);
+        }
+      }
+      
+      &.cancel-btn {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #e2e8f0;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}
+
+/* Animaciones mejoradas */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive mejorado */
+@media (max-width: 768px) {
+  .content {
+    padding: 24px 16px;
+  }
+  
+  .review-card {
+    padding: 20px;
+    
+    .review-header {
+      gap: 16px;
+      
+      .movie-poster {
+        width: 70px;
+        height: 105px;
+      }
+      
+      .movie-info h3 {
+        font-size: 1.2rem;
+      }
+      
+      .stars mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+    
+    .review-text {
+      padding: 20px;
+      font-size: 1rem;
+    }
+  }
+  
+  .edit-mode {
+    .rating-input .stars-interactive mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+    
+    .edit-actions {
+      flex-direction: column;
+      
+      button {
+        flex: 1;
+      }
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .review-card {
+    padding: 16px;
+    
+    .review-header {
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+      
+      .movie-poster {
+        width: 100px;
+        height: 150px;
+        margin: 0 auto;
+      }
+      
+      .movie-info {
+        gap: 8px;
+      }
+    }
+    
+    .actions {
+      flex-direction: column;
+      
+      button {
+        flex: 1;
+      }
+    }
+  }
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #f87171, #dc2626);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #fca5a5, #ef4444);
+}

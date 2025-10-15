@@ -1,0 +1,43 @@
+<!-- src/app/shared/components/card/card.component.html -->
+<mat-card class="movie-card" [class.expanded]="isExpanded" (click)="toggleExpand($event)">
+  <div class="card-main">
+    <div class="image-container">
+      <img [src]="movie.poster_path!" [alt]="movie.title" loading="lazy">
+      <div class="image-overlay">
+        <h3 class="title">{{ movie.title }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-expansion" *ngIf="isExpanded">
+    <button mat-icon-button class="close-btn" (click)="toggleExpand($event)">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <div class="expansion-content">
+      <h4 class="expansion-title">{{ movie.title }}</h4>
+      
+      <div class="rating" *ngIf="movie.vote_average">
+        <mat-icon>star</mat-icon>
+        <span>{{ movie.vote_average.toFixed(1) }}</span>
+      </div>
+
+      <div class="genres" *ngIf="movie.genreNames && movie.genreNames.length > 0">
+        <span class="genre-tag" *ngFor="let g of movie.genreNames.slice(0, 3)">{{ g }}</span>
+      </div>
+
+      <p class="expansion-overview">{{ movie.overview || 'Sin descripción disponible' }}</p>
+
+      <div class="expansion-actions">
+        <button mat-raised-button color="primary" (click)="goToDetail($event)">
+          <mat-icon>info</mat-icon>
+          Ver Detalles
+        </button>
+        <button mat-raised-button (click)="toggleSave($event)">
+          <mat-icon>{{ isSaved ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+          {{ isSaved ? 'Guardada' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</mat-card>
