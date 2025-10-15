@@ -1,5 +1,9 @@
 <!-- src/app/pages/login/login.component.html -->
 <div class="login-container">
+  <!-- Capas de fondo para el carrusel -->
+  <div class="bg layer" [class.show]="showA()" [style.background-image]="bgCss(aUrl())"></div>
+  <div class="bg layer" [class.show]="!showA()" [style.background-image]="bgCss(bUrl())"></div>
+  
   <mat-card class="login-card">
     <mat-card-content>
       <div class="logo">

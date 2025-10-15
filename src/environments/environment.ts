@@ -6,6 +6,7 @@ export const environment = {
   tmdb: {
     apiBase: 'https://api.themoviedb.org/3',
     imageBase: 'https://image.tmdb.org/t/p/w500',
+    imageBackdropBase: 'https://image.tmdb.org/t/p/w1280',
     apiKey: '3b74654a3c4a70607cc4e35aad5bc981',
   },
   firebaseConfig: {

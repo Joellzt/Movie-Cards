@@ -1,5 +1,5 @@
 // src/app/pages/login/login.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,6 +14,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AuthService } from '../../services/auth.service';
+import { TmdbHeroService } from '../../services/tmdb-hero.service';
 
 @Component({
   standalone: true,
@@ -34,10 +35,19 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
   isRegisterMode = false;
   loading = false;
   hidePassword = true;
+
+  // Signals para el carrusel de fondo
+  aUrl = signal<string>('');
+  bUrl = signal<string>('');
+  showA = signal<boolean>(true);
+
+  private imgs: string[] = [];
+  private timer?: any;
+  private idx = 0;
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -48,7 +58,8 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private hero: TmdbHeroService
   ) {
     // Si ya está autenticado, redirigir
     if (this.authService.isAuthenticated) {
@@ -56,10 +67,23 @@ export class LoginComponent {
     }
   }
 
+  ngOnInit(): void {
+    // cargar imágenes y arrancar el carrusel
+    this.hero.getHeroBackdrops(12).subscribe((list) => {
+      this.imgs = list.map((x) => x.url);
+      this.preloadAll(this.imgs);
+      if (this.imgs.length) {
+        this.aUrl.set(this.imgs[0]);
+        this.bUrl.set(this.imgs[1 % this.imgs.length]);
+        this.startCycle();
+      }
+    });
+  }
+
   toggleMode(): void {
     this.isRegisterMode = !this.isRegisterMode;
     this.loginForm.reset();
-    
+
     if (this.isRegisterMode) {
       this.loginForm.get('displayName')?.setValidators([Validators.required]);
     } else {
@@ -107,5 +131,42 @@ export class LoginComponent {
 
   private showMessage(message: string): void {
     this.snackBar.open(message, 'Cerrar', { duration: 4000 });
+  }
+
+  bgCss = (url: string) => (url ? `url('${url}')` : 'none');
+
+  private startCycle(intervalMs = 6000) {
+    this.stopCycle();
+    this.timer = setInterval(() => {
+      this.idx = (this.idx + 1) % this.imgs.length;
+      const next = this.imgs[this.idx];
+
+      // alternar capas para hacer cross-fade
+      if (this.showA()) {
+        this.bUrl.set(next);
+        this.showA.set(false); // aparece B
+      } else {
+        this.aUrl.set(next);
+        this.showA.set(true); // aparece A
+      }
+    }, intervalMs);
+  }
+
+  private stopCycle() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = undefined;
+    }
+  }
+
+  private preloadAll(urls: string[]) {
+    urls.forEach((u) => {
+      const img = new Image();
+      img.src = u;
+    });
+  }
+  
+  ngOnDestroy(): void { 
+    this.stopCycle(); 
   }
 }
