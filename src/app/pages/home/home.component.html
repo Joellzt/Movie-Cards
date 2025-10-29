@@ -5,12 +5,25 @@
   <mat-toolbar class="nav">
     <span class="brand">Movie Cards</span>
 
-    <!-- Solo búsqueda -->
-    <mat-form-field appearance="outline" class="search">
-      <mat-label>Buscar películas</mat-label>
-      <input matInput [formControl]="q" placeholder="Título..." />
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
+    <div class="spacer"></div>
+
+    <!-- Botón para mostrar búsqueda -->
+    <button mat-icon-button class="search-toggle" (click)="toggleSearch()" *ngIf="!showSearch">
+      <mat-icon>search</mat-icon>
+    </button>
+
+    <!-- Búsqueda y botón cerrar juntos -->
+    <div class="search-wrapper" *ngIf="showSearch">
+      <mat-form-field appearance="outline" class="search">
+        <mat-label>Buscar películas</mat-label>
+        <input matInput [formControl]="q" placeholder="Título..." #searchInput />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      
+      <button mat-icon-button class="close-search" (click)="closeSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
 
     <!-- Avatar con menú -->
     <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-avatar">
@@ -20,34 +33,40 @@
       </div>
     </button>
 
-    <mat-menu #userMenu="matMenu" class="user-menu">
-      <div class="user-info">
-        <div class="user-avatar-large">
-          <img *ngIf="userAvatar" [src]="userAvatar" [alt]="userName">
-          <div *ngIf="!userAvatar" class="avatar-placeholder-large">
-            {{ getInitial() }}
-          </div>
-        </div>
-        <div class="user-details">
-          <p class="user-name">{{ userName }}</p>
-          <p class="user-email">{{ userEmail }}</p>
-        </div>
+   <mat-menu #userMenu="matMenu" class="user-menu" 
+          backdropClass="user-menu-backdrop">
+  <div class="user-info">
+    <div class="user-avatar-large">
+      <img *ngIf="userAvatar" [src]="userAvatar" [alt]="userName">
+      <div *ngIf="!userAvatar" class="avatar-placeholder-large">
+        {{ getInitial() }}
       </div>
-      <mat-divider></mat-divider>
-      <button mat-menu-item routerLink="/saved">
-        <mat-icon>bookmark</mat-icon>
-        <span>Películas Guardadas</span>
-      </button>
-      <button mat-menu-item routerLink="/reviews">
-        <mat-icon>rate_review</mat-icon>
-        <span>Mis Reseñas</span>
-      </button>
-      <mat-divider></mat-divider>
-      <button mat-menu-item (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        <span>Cerrar Sesión</span>
-      </button>
-    </mat-menu>
+    </div>
+    <div class="user-details">
+      <p class="user-name">{{ userName }}</p>
+      <p class="user-email">{{ userEmail }}</p>
+    </div>
+  </div>
+  
+  <mat-divider></mat-divider>
+  
+  <button mat-menu-item routerLink="/saved">
+    <mat-icon>bookmark</mat-icon>
+    <span>Películas Guardadas</span>
+  </button>
+  
+  <button mat-menu-item routerLink="/reviews">
+    <mat-icon>rate_review</mat-icon>
+    <span>Mis Reseñas</span>
+  </button>
+  
+  <mat-divider></mat-divider>
+  
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Cerrar Sesión</span>
+  </button>
+</mat-menu>
   </mat-toolbar>
 
   <!-- Hero Section (solo cuando no hay búsqueda) -->

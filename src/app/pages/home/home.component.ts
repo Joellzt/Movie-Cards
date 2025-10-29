@@ -253,4 +253,16 @@ private fetchPopular() {
   private showMessage(message: string): void {
     this.snackBar.open(message, 'Cerrar', { duration: 2000 });
   }
+  showSearch = false;
+
+// Método 1
+toggleSearch(): void {
+  this.showSearch = !this.showSearch;
+}
+
+// Método 2
+closeSearch(): void {
+  this.showSearch = false;
+  this.q.setValue('');
+}
 }

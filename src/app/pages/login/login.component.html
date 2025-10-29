@@ -3,7 +3,7 @@
   <!-- Capas de fondo para el carrusel -->
   <div class="bg layer" [class.show]="showA()" [style.background-image]="bgCss(aUrl())"></div>
   <div class="bg layer" [class.show]="!showA()" [style.background-image]="bgCss(bUrl())"></div>
-  
+
   <mat-card class="login-card">
     <mat-card-content>
       <div class="logo">
@@ -50,13 +50,8 @@
           </mat-error>
         </mat-form-field>
 
-        <button 
-          mat-raised-button 
-          color="primary" 
-          type="submit" 
-          class="full-width submit-btn"
-          [disabled]="loginForm.invalid || loading"
-        >
+        <button mat-raised-button color="primary" type="submit" class="full-width submit-btn"
+          [disabled]="loginForm.invalid || loading">
           <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
           <span *ngIf="!loading">{{ isRegisterMode ? 'Registrarse' : 'Iniciar sesión' }}</span>
         </button>
@@ -66,12 +61,7 @@
         <span class="divider-text">O continuar con</span>
       </mat-divider>
 
-      <button 
-        mat-stroked-button 
-        class="full-width google-btn"
-        (click)="loginWithGoogle()"
-        [disabled]="loading"
-      >
+      <button mat-stroked-button class="full-width google-btn" (click)="loginWithGoogle()" [disabled]="loading">
         <img src="https://www.google.com/favicon.ico" alt="Google" class="google-icon">
         Continuar con Google
       </button>

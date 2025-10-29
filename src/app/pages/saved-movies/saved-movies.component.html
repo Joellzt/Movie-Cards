@@ -1,57 +1,28 @@
 <!-- src/app/pages/saved-movies/saved-movies.component.html -->
 <section class="saved-page">
   <mat-toolbar>
-    <button mat-icon-button (click)="goBack()">  <!-- ← Cambiar aquí -->
+    <button mat-icon-button (click)="goBack()">
       <mat-icon>arrow_back</mat-icon>
     </button>
     <span class="title">Películas Guardadas</span>
   </mat-toolbar>
 
   <div class="content">
+    <!-- Loading -->
     <div class="status" *ngIf="loading">Cargando...</div>
+    
+    <!-- Estado vacío -->
     <div class="status" *ngIf="!loading && movies.length === 0">
       <mat-icon class="empty-icon">bookmark_border</mat-icon>
       <p>No tienes películas guardadas aún</p>
-      <button mat-raised-button color="primary" routerLink="/home">
+      <button mat-raised-button color="primary" routerLink="/home" class="action-btn">
         Explorar películas
       </button>
     </div>
 
+    <!-- Grid con app-movie-card -->
     <div class="grid" *ngIf="!loading && movies.length > 0">
-      <mat-card
-        *ngFor="let movie of movies"
-        class="movie-card"
-        [routerLink]="['/movie', movie.movieId]"
-      >
-        <div class="card-image">
-          <img
-            [src]="movie.moviePoster"
-            [alt]="movie.movieTitle"
-          />
-          <button
-            mat-icon-button
-            color="warn"
-            (click)="removeMovie(movie.movieId, $event)"
-            class="remove-btn"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-        <mat-card-content>
-          <h3>{{ movie.movieTitle }}</h3>
-          <div class="meta">
-            <span class="rating">
-              <mat-icon>star</mat-icon>
-              {{ movie.voteAverage.toFixed(1) }}
-            </span>
-            <span class="date">{{ movie.releaseDate | date:'yyyy' }}</span>
-          </div>
-          <p class="saved-date">
-            <mat-icon>schedule</mat-icon>
-            Guardada: {{ movie.savedAt | date:'short' }}
-          </p>
-        </mat-card-content>
-      </mat-card>
+      <app-movie-card *ngFor="let movie of movies" [movie]="movie"></app-movie-card>
     </div>
   </div>
 </section>
