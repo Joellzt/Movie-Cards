@@ -7,10 +7,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CardComponent } from '../../shared/components/card/card.component';
 
 import { FirebaseService } from '../../services/firebase.service';
 import { AuthService } from '../../services/auth.service';
 import { SavedMovie } from '../../models/review.model';
+import { Movie } from '../../models/movie.model';
 
 @Component({
   standalone: true,
@@ -22,13 +24,14 @@ import { SavedMovie } from '../../models/review.model';
     MatIconModule,
     MatButtonModule,
     MatCardModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    CardComponent  // ← AGREGAR AQUÍ
   ],
   templateUrl: './saved-movies.component.html',
   styleUrls: ['./saved-movies.component.scss']
 })
 export class SavedMoviesComponent implements OnInit {
-  movies: SavedMovie[] = [];
+  movies: Movie[] = [];  // ← Cambiar de SavedMovie[] a Movie[]
   loading = true;
 
   constructor(
@@ -47,9 +50,27 @@ export class SavedMoviesComponent implements OnInit {
   loadMovies(): void {
     this.loading = true;
     this.firebase.getSavedMovies().subscribe({
-      next: (movies) => {
-        console.log('✅ SavedMovies: Películas cargadas:', movies);
-        this.movies = movies;
+      next: (savedMovies) => {
+        console.log('✅ SavedMovies: Películas cargadas:', savedMovies);
+        
+        // Transformar SavedMovie a Movie para MovieCardComponent
+        this.movies = savedMovies.map(saved => ({
+          id: saved.movieId,
+          title: saved.movieTitle,
+          poster_path: saved.moviePoster,
+          overview: saved.overview,
+          release_date: saved.releaseDate,
+          vote_average: saved.voteAverage,
+          backdrop_path: '',
+          genre_ids: [],
+          original_language: '',
+          original_title: saved.movieTitle,
+          popularity: 0,
+          video: false,
+          vote_count: 0,
+          adult: false
+        }));
+        
         this.loading = false;
       },
       error: (error) => {
@@ -76,7 +97,7 @@ export class SavedMoviesComponent implements OnInit {
     this.firebase.removeSavedMovie(movieId).subscribe({
       next: () => {
         console.log('✅ Película eliminada:', movieId);
-        this.movies = this.movies.filter(m => m.movieId !== movieId);
+        this.movies = this.movies.filter(m => m.id !== movieId);  // ← Cambiar m.movieId a m.id
         this.showMessage('Película eliminada');
       },
       error: (error) => {

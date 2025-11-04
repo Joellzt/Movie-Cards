@@ -15,6 +15,9 @@ $text-muted: #a2acc3;
   background: $primary-bg;
   color: $text-secondary;
   padding-bottom: 24px;
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
 }
 
 // Botón de volver
@@ -92,7 +95,7 @@ $text-muted: #a2acc3;
   }
 }
 
-// Info de película
+// Info de película - REORGANIZADA PARA RESPONSIVE
 .movie-info {
   display: flex;
   gap: 32px;
@@ -105,16 +108,18 @@ $text-muted: #a2acc3;
 
   @media (max-width: 768px) {
     flex-direction: column;
-    gap: 20px;
+    gap: 0;
     margin-bottom: 32px;
+    align-items: stretch;
   }
 
   @media (max-width: 480px) {
-    gap: 16px;
+    gap: 0;
     margin-bottom: 24px;
   }
 }
 
+// Póster - CENTRADO EN TABLETAS Y MÓVILES
 .poster {
   width: 300px;
   min-width: 300px;
@@ -130,18 +135,25 @@ $text-muted: #a2acc3;
   @media (max-width: 768px) {
     width: 100%;
     min-width: unset;
-    max-width: 400px;
-    margin: 0 auto;
+    max-width: 350px;
+    margin: 0 auto 24px;
+    display: block;
   }
 
   @media (max-width: 480px) {
-    max-width: 300px;
+    max-width: 280px;
+    margin-bottom: 20px;
   }
 }
 
+// Información - CENTRADA EN MÓVIL
 .info {
   flex: 1;
   min-width: 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 
   h1 {
     font-size: 2.5rem;
@@ -231,6 +243,10 @@ $text-muted: #a2acc3;
     margin-bottom: 24px;
     font-size: 1.1rem;
 
+    @media (max-width: 768px) {
+      text-align: justify;
+    }
+
     @media (max-width: 480px) {
       font-size: 1rem;
       line-height: 1.5;
@@ -238,7 +254,7 @@ $text-muted: #a2acc3;
   }
 }
 
-// Ratings container
+// Ratings container - MEJOR RESPONSIVE
 .ratings-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -252,6 +268,9 @@ $text-muted: #a2acc3;
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
     gap: 12px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -360,7 +379,7 @@ $text-muted: #a2acc3;
   }
 }
 
-// Información adicional
+// Información adicional - MEJOR ESPACIADO
 .additional-info {
   margin-top: 32px;
   display: flex;
@@ -386,24 +405,30 @@ $text-muted: #a2acc3;
     @media (max-width: 768px) {
       font-size: 1.2rem;
       margin-bottom: 12px;
+      text-align: center;
     }
 
     @media (max-width: 480px) {
       font-size: 1.1rem;
-      text-align: center;
     }
   }
 }
 
-// Financiero
+// Financiero - RESPONSIVE
 .financial-info {
   .financial-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
 
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
       grid-template-columns: 1fr;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 480px) {
       gap: 12px;
     }
   }
@@ -433,6 +458,7 @@ $text-muted: #a2acc3;
       width: 32px;
       height: 32px;
       color: $accent-gold;
+      flex-shrink: 0;
 
       @media (max-width: 480px) {
         font-size: 28px;
@@ -471,6 +497,7 @@ $text-muted: #a2acc3;
   overflow-x: auto;
   padding-bottom: 12px;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 
   @media (max-width: 480px) {
     gap: 12px;
@@ -496,29 +523,41 @@ $text-muted: #a2acc3;
   }
 }
 
-// Productoras
+// PRODUCTORAS - TAMAÑO FIJO Y CENTRADO
 .production-companies {
   .companies-grid {
     @extend .scrollable-grid;
+    
+    @media (max-width: 768px) {
+      justify-content: flex-start;
+      padding-left: 8px;
+    }
   }
 
   .company-item {
     background: rgba(255, 255, 255, 0.05);
     padding: 16px;
     border-radius: 8px;
-    min-width: 120px;
-    max-width: 120px;
-    min-height: 80px;
+    width: 150px !important;
+    height: 100px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+    min-height: 100px !important;
+    max-height: 100px !important;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    box-sizing: border-box;
 
     @media (max-width: 480px) {
-      min-width: 100px;
-      max-width: 100px;
-      min-height: 70px;
+      width: 130px !important;
+      height: 90px !important;
+      min-width: 130px !important;
+      max-width: 130px !important;
+      min-height: 90px !important;
+      max-height: 90px !important;
       padding: 12px;
     }
 
@@ -529,7 +568,9 @@ $text-muted: #a2acc3;
 
     img {
       max-width: 100%;
-      max-height: 50px;
+      max-height: 60px;
+      width: auto;
+      height: auto;
       object-fit: contain;
       filter: brightness(0) invert(1);
     }
@@ -538,6 +579,10 @@ $text-muted: #a2acc3;
       text-align: center;
       font-size: 0.85rem;
       word-break: break-word;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
 
       @media (max-width: 480px) {
         font-size: 0.75rem;
@@ -546,10 +591,15 @@ $text-muted: #a2acc3;
   }
 }
 
-// Reparto
+// Reparto - MEJOR SCROLL
 .cast-section {
   .cast-grid {
     @extend .scrollable-grid;
+    
+    @media (max-width: 768px) {
+      justify-content: flex-start;
+      padding-left: 8px;
+    }
   }
 
   .cast-member {
@@ -629,7 +679,7 @@ $text-muted: #a2acc3;
   }
 }
 
-// ========== TRAILER SECTION ==========
+// ========== TRAILER SECTION - RESPONSIVE MEJORADO ==========
 .trailer-section {
   h3 {
     font-size: 1.3rem;
@@ -637,9 +687,12 @@ $text-muted: #a2acc3;
     color: $text-primary;
     font-weight: 700;
 
+    @media (max-width: 768px) {
+      text-align: center;
+    }
+
     @media (max-width: 480px) {
       font-size: 1.1rem;
-      text-align: center;
     }
   }
 
@@ -651,6 +704,11 @@ $text-muted: #a2acc3;
     border-radius: 12px;
     background: rgba(0, 0, 0, 0.5);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    max-width: 100%;
+
+    @media (max-width: 768px) {
+      border-radius: 8px;
+    }
 
     iframe {
       position: absolute;
@@ -659,6 +717,10 @@ $text-muted: #a2acc3;
       width: 100%;
       height: 100%;
       border-radius: 12px;
+
+      @media (max-width: 768px) {
+        border-radius: 8px;
+      }
     }
   }
 
@@ -676,56 +738,70 @@ $text-muted: #a2acc3;
     border-radius: 12px;
     border: 2px dashed rgba(255, 255, 255, 0.1);
 
+    @media (max-width: 480px) {
+      padding: 40px 16px;
+    }
+
     mat-icon {
       font-size: 48px;
       width: 48px;
       height: 48px;
       margin-bottom: 16px;
       color: $text-muted;
+
+      @media (max-width: 480px) {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+      }
     }
 
     p {
       margin: 0;
       color: $text-muted;
       font-size: 1.1rem;
+
+      @media (max-width: 480px) {
+        font-size: 1rem;
+      }
     }
   }
 }
 
-// Formulario de reseñas
+// ========== FORMULARIO DE RESEÑAS - RESPONSIVE ==========
 .review-form {
-  background: linear-gradient(135deg, #64000079, #b80505);
-  padding: 24px;
+  background: linear-gradient(135deg, rgba(100, 0, 0, 0.47), rgba(184, 5, 5, 0.8));
+  padding: 32px;
   margin-bottom: 48px;
-  border-radius: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba($accent-gold, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
   @media (max-width: 768px) {
-    padding: 20px;
+    padding: 24px;
     margin-bottom: 32px;
   }
 
   @media (max-width: 480px) {
-    padding: 16px;
+    padding: 20px;
     margin-bottom: 24px;
   }
 
   h2 {
     margin: 0 0 24px;
     color: $text-primary;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
 
     @media (max-width: 480px) {
       font-size: 1.3rem;
       margin-bottom: 20px;
-      text-align: center;
     }
   }
 
   .rating-input {
     margin-bottom: 24px;
-
-    @media (max-width: 480px) {
-      margin-bottom: 20px;
-    }
 
     label {
       display: block;
@@ -788,12 +864,13 @@ $text-muted: #a2acc3;
 
   .full-width {
     width: 100%;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
 
   .form-actions {
     display: flex;
     gap: 12px;
+    justify-content: center;
     flex-wrap: wrap;
 
     @media (max-width: 480px) {
@@ -804,11 +881,26 @@ $text-muted: #a2acc3;
     button {
       display: flex;
       align-items: center;
-      gap: 6px;
-      flex: 1;
+      gap: 8px;
+      min-width: 140px;
+      justify-content: center;
 
       @media (max-width: 480px) {
-        justify-content: center;
+        min-width: 100%;
+      }
+
+      // Botón de enviar
+      &:first-child {
+        background: linear-gradient(135deg, $accent-gold, #e5a000) !important;
+        color: #1f0000 !important;
+        font-weight: 600;
+      }
+
+      // Botón de cancelar
+      &:last-child {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: $text-primary !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
       }
     }
   }
@@ -820,7 +912,9 @@ textarea.mat-mdc-input-element {
   color: $text-primary !important;
   caret-color: $text-primary !important;
   border-radius: 8px !important;
-  padding: 12px !important;
+  padding: 16px !important;
+  min-height: 100px !important;
+  resize: vertical !important;
 
   &::placeholder {
     color: rgba(255, 255, 255, 0.6) !important;
@@ -835,30 +929,31 @@ textarea.mat-mdc-input-element {
   --mdc-outlined-text-field-input-text-color: #{$text-primary} !important;
 }
 
-// Reseñas existentes
+// ========== RESEÑAS EXISTENTES - RESPONSIVE ==========
 .has-review {
   .existing-review {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 20px;
+    background: rgba($accent-gold, 0.1);
+    padding: 24px;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    border: 1px solid rgba($accent-gold, 0.3);
 
     @media (max-width: 480px) {
-      padding: 16px;
+      padding: 20px;
     }
 
     .review-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 12px;
 
       @media (max-width: 480px) {
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
+        gap: 16px;
       }
 
       .stars {
@@ -866,7 +961,20 @@ textarea.mat-mdc-input-element {
         gap: 2px;
         align-items: center;
         flex-wrap: wrap;
+
+        mat-icon {
+          color: $accent-gold;
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
       }
+    }
+
+    .review-content {
+      margin-bottom: 16px;
+      line-height: 1.6;
+      color: $text-secondary;
     }
 
     .review-actions {
@@ -883,30 +991,44 @@ textarea.mat-mdc-input-element {
           min-width: 0;
         }
       }
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
     }
   }
 }
 
-// Lista de reseñas
+// ========== LISTA DE RESEÑAS - RESPONSIVE ==========
 .reviews-section {
   h2 {
     margin-bottom: 24px;
     color: $text-primary;
+    font-size: 1.5rem;
+    font-weight: 700;
+
+    @media (max-width: 768px) {
+      text-align: center;
+    }
 
     @media (max-width: 480px) {
       font-size: 1.3rem;
-      text-align: center;
     }
   }
 
   .no-reviews {
     text-align: center;
     color: $text-muted;
-    padding: 48px;
+    padding: 60px 20px;
     font-size: 1.1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
 
     @media (max-width: 480px) {
-      padding: 32px 24px;
+      padding: 40px 20px;
       font-size: 1rem;
     }
   }
@@ -915,25 +1037,32 @@ textarea.mat-mdc-input-element {
 .reviews-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 
   @media (max-width: 480px) {
-    gap: 12px;
+    gap: 16px;
   }
 }
 
 .review-card {
   background: $card-bg;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 24px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 
   @media (max-width: 480px) {
-    padding: 16px;
+    padding: 20px;
   }
 
   &.my-review {
     border-left: 4px solid $accent-gold;
     background: #8b1a1a;
+    box-shadow: 0 4px 20px rgba($accent-gold, 0.2);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   }
 
   .review-header {
@@ -941,12 +1070,12 @@ textarea.mat-mdc-input-element {
     justify-content: space-between;
     margin-bottom: 16px;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 16px;
 
     @media (max-width: 480px) {
       flex-direction: column;
       align-items: flex-start;
-      gap: 16px;
+      gap: 12px;
     }
 
     .user-info {
@@ -955,8 +1084,8 @@ textarea.mat-mdc-input-element {
       gap: 12px;
 
       .avatar {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         background: linear-gradient(135deg, $accent-red, #c91a1a);
         color: white;
@@ -964,13 +1093,13 @@ textarea.mat-mdc-input-element {
         align-items: center;
         justify-content: center;
         font-weight: 700;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         flex-shrink: 0;
 
         @media (max-width: 480px) {
-          width: 36px;
-          height: 36px;
-          font-size: 1rem;
+          width: 40px;
+          height: 40px;
+          font-size: 1.1rem;
         }
       }
 
@@ -993,6 +1122,8 @@ textarea.mat-mdc-input-element {
           padding: 0 8px;
           background: $accent-gold;
           color: $primary-bg;
+          border-radius: 10px;
+          font-weight: 700;
         }
       }
 
@@ -1010,26 +1141,31 @@ textarea.mat-mdc-input-element {
 
       mat-icon {
         color: $accent-gold;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
       }
 
       .rating-value {
         margin-left: 8px;
         font-weight: 600;
         color: $text-primary;
+        font-size: 1.1rem;
       }
     }
   }
 
   .review-text {
     color: $text-secondary;
-    line-height: 1.5;
+    line-height: 1.6;
+    margin: 0;
 
     @media (min-width: 641px) {
-      padding-left: 52px;
+      padding-left: 56px;
     }
 
     @media (max-width: 480px) {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
     }
   }
 }
