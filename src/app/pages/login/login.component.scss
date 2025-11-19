@@ -7,7 +7,6 @@
   padding: 24px;
   position: relative;
   overflow: hidden;
-
   // Estilos para las capas de fondo
   .bg {
     position: absolute;
@@ -110,6 +109,7 @@
   z-index: 10; // Asegurar que esté por encima de todo
   animation: cardAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   margin-left: 10%;
+
 
   @media (max-width: 1024px) {
     margin-left: 5%;
@@ -371,4 +371,8 @@
   @media (max-width: 768px) {
     margin-top: 20px;
   }
+}
+
+.arreglo{
+  color: white !important;
 }

@@ -16,7 +16,7 @@
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width" *ngIf="isRegisterMode">
           <mat-label>Nombre</mat-label>
-          <input matInput formControlName="displayName" placeholder="Tu nombre">
+          <input class="arreglo" matInput formControlName="displayName" placeholder="Tu nombre">
           <mat-icon matPrefix>person</mat-icon>
           <mat-error *ngIf="loginForm.get('displayName')?.hasError('required')">
             El nombre es requerido
@@ -25,7 +25,7 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Correo electrónico</mat-label>
-          <input matInput type="email" formControlName="email" placeholder="tu@email.com">
+          <input class="arreglo" matInput type="email" formControlName="email" placeholder="tu@email.com">
           <mat-icon matPrefix>email</mat-icon>
           <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
             El correo es requerido
@@ -37,7 +37,7 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Contraseña</mat-label>
-          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+          <input class="arreglo" matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
           <mat-icon matPrefix>lock</mat-icon>
           <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
             <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
