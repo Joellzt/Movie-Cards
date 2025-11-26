@@ -84,7 +84,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(text => {
         if (!text.trim()) {
+          // Si no hay texto, recargar popular y reiniciar hero
           this.fetchPopular();
+          
+          // Reiniciar el auto-cambio del hero
+          if (this.heroInterval) {
+            clearInterval(this.heroInterval);
+          }
+          this.heroInterval = window.setInterval(() => {
+            this.nextHero();
+          }, 5000);
           return;
         }
         this.search(text);
@@ -123,6 +132,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private search(text: string) {
     this.loading = true;
+    
+    // Pausar el auto-cambio del hero durante la búsqueda
+    if (this.heroInterval) {
+      clearInterval(this.heroInterval);
+    }
+    
     this.tmdb.searchMovies(text).subscribe(list => {
       this.movies = list;
       this.heroMovies = [];
@@ -264,5 +279,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.showSearch = false;
     this.q.setValue('');
     this.fetchPopular();
+    
+    // Reiniciar el auto-cambio del hero
+    if (this.heroInterval) {
+      clearInterval(this.heroInterval);
+    }
+    this.heroInterval = window.setInterval(() => {
+      this.nextHero();
+    }, 5000);
   }
 }
