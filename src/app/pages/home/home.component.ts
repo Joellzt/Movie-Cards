@@ -56,6 +56,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   userEmail = '';
   userAvatar = '';
   isCurrentHeroSaved = false;
+  showSearch = false;
 
   private heroInterval?: number;
   private subscriptions = new Subscription();
@@ -104,21 +105,21 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-private fetchPopular() {
-  this.loading = true;
-  
-  // Cargar películas en cartelera para el hero
-  this.tmdb.nowPlayingMovies().subscribe(heroList => {
-    this.heroMovies = heroList.slice(0, 10);
+  private fetchPopular() {
+    this.loading = true;
     
-    // Cargar películas populares para el grid
-    this.tmdb.popularMovies().subscribe(list => {
-      this.movies = list;
-      this.loading = false;
-      this.checkIfHeroSaved();
+    // Cargar películas en cartelera para el hero
+    this.tmdb.nowPlayingMovies().subscribe(heroList => {
+      this.heroMovies = heroList.slice(0, 10);
+      
+      // Cargar películas populares para el grid
+      this.tmdb.popularMovies().subscribe(list => {
+        this.movies = list;
+        this.loading = false;
+        this.checkIfHeroSaved();
+      });
     });
-  });
-}
+  }
 
   private search(text: string) {
     this.loading = true;
@@ -253,16 +254,15 @@ private fetchPopular() {
   private showMessage(message: string): void {
     this.snackBar.open(message, 'Cerrar', { duration: 2000 });
   }
-  showSearch = false;
 
-// Método 1
-toggleSearch(): void {
-  this.showSearch = !this.showSearch;
-}
+  // ========== Métodos de búsqueda ==========
+  toggleSearch(): void {
+    this.showSearch = !this.showSearch;
+  }
 
-// Método 2
-closeSearch(): void {
-  this.showSearch = false;
-  this.q.setValue('');
-}
+  closeSearch(): void {
+    this.showSearch = false;
+    this.q.setValue('');
+    this.fetchPopular();
+  }
 }
